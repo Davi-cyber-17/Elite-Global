@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04060d">
+<title>Elite Global</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+
+  <!-- MENU -->
+  <section id="screen-menu" class="screen active">
+    <div class="menu">
+      <div class="hero">
+        <svg class="skyline" viewBox="0 0 320 110" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+          <rect x="8"   y="60" width="34" height="50" fill="#e63946"/>
+          <rect x="46"  y="30" width="30" height="80" fill="#ffc83d"/>
+          <rect x="80"  y="48" width="38" height="62" fill="#2ecc71"/>
+          <rect x="122" y="14" width="34" height="96" fill="#ff8c42"/>
+          <rect x="160" y="40" width="36" height="70" fill="#9b59b6"/>
+          <rect x="200" y="22" width="32" height="88" fill="#2a9df4"/>
+          <rect x="236" y="54" width="34" height="56" fill="#ff5fa2"/>
+          <rect x="274" y="36" width="36" height="74" fill="#00c2a8"/>
+        </svg>
+        <h1 class="logo"><span>Elite</span><span>Global</span></h1>
+      </div>
+      <p class="tag">Compre ruas, construa casas e hotéis e deixe seus rivais sem um tostão. De 2 a 8 jogadores.</p>
+      <div class="modes">
+        <button id="btnOnline" class="mode online">
+          <strong>Modo Online</strong>
+          <small>Crie uma sala e passe o código para os amigos entrarem de qualquer aparelho.</small>
+        </button>
+        <button id="btnLocal" class="mode local">
+          <strong>Modo Local</strong>
+          <small>Todos jogam no mesmo aparelho, passando a vez.</small>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODO LOCAL -->
+  <section id="screen-local" class="screen">
+    <div class="panel">
+      <button class="back" data-go="menu">Voltar</button>
+      <h2>Modo Local</h2>
+      <div class="stepper">
+        <button id="nMinus" aria-label="Menos um jogador">−</button>
+        <span id="nVal">2</span>
+        <button id="nPlus" aria-label="Mais um jogador">+</button>
+        <label>jogadores</label>
+      </div>
+      <div id="localNames" class="names"></div>
+      <button id="btnLocalStart" class="primary">Começar partida</button>
+    </div>
+  </section>
+
+  <!-- MODO ONLINE -->
+  <section id="screen-online" class="screen">
+    <div class="panel">
+      <button class="back" data-go="menu">Voltar</button>
+      <h2>Modo Online</h2>
+      <label class="field">Seu nome
+        <input id="onName" maxlength="14" autocomplete="nickname" placeholder="Como você quer aparecer">
+      </label>
+      <div class="twocol">
+        <div class="box">
+          <h3>Criar sala</h3>
+          <p>Você será o anfitrião e recebe um código para compartilhar.</p>
+          <button id="btnCreate" class="primary">Criar sala</button>
+        </div>
+        <div class="box">
+          <h3>Entrar em uma sala</h3>
+          <input id="onCode" maxlength="5" placeholder="Código da sala" autocapitalize="characters" autocomplete="off">
+          <button id="btnJoin" class="primary">Entrar</button>
+        </div>
+      </div>
+      <p id="onStatus" class="status" role="status"></p>
+    </div>
+  </section>
+
+  <!-- SALA -->
+  <section id="screen-lobby" class="screen">
+    <div class="panel">
+      <h2>Sala <span id="roomCode" class="code">-----</span></h2>
+      <div class="row"><button id="btnCopy" class="ghost">Copiar link da sala</button></div>
+      <ul id="lobbyList" class="lobbylist"></ul>
+      <p id="lobbyHint" class="status"></p>
+      <div class="row">
+        <button id="btnStartOnline" class="primary">Iniciar partida</button>
+        <button id="btnLeave" class="ghost">Sair da sala</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOGO -->
+  <section id="screen-game" class="screen">
+    <div id="game">
+      <div id="boardWrap"><div id="board"></div></div>
+      <aside id="hud">
+        <div id="turnBanner"></div>
+        <div id="players"></div>
+        <div id="hudBtns">
+          <button data-hud="props">Propriedades</button>
+          <button data-hud="trade">Negociar</button>
+          <button data-hud="quit" class="danger">Desistir</button>
+        </div>
+        <div id="log" aria-live="polite"></div>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<div id="modal" class="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true">
+    <button class="x" id="modalX" aria-label="Fechar">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div id="confirmBox" class="modal confirm" hidden>
+  <div class="sheet" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <h3 id="confirmTitle">Tem certeza?</h3>
+    <p id="confirmMsg"></p>
+    <div class="row">
+      <button id="confirmNo" class="ghost" type="button">Cancelar</button>
+      <button id="confirmYes" class="danger" type="button">Confirmar</button>
+    </div>
+  </div>
+</div>
+<div id="netBanner" hidden>Reconectando à sala…</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
